@@ -6,7 +6,7 @@ module.exports = {
         .setDescription('Submit feedback about the bot'),
 
     async execute(interaction) {
-        const modal = interaction.client.handlers.components.builders.modal('feedback-modal');
-        await interaction.showModal(modal);
+        const modalData = interaction.client.handlers.components.registry.create('MODAL', 'feedback-modal');
+        await interaction.showModal(modalData);
     }
 };

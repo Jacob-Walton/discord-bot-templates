@@ -1,4 +1,5 @@
 const { ActionRowBuilder, StringSelectMenuBuilder } = require('discord.js');
+const RoleMenu = require('../../database/models/RoleMenu');
 
 module.exports = {
     customId: 'rolesetup',
@@ -13,7 +14,7 @@ module.exports = {
         if (!setupData || setupData.userId !== interaction.user.id) {
             return await interaction.reply({
                 content: 'This setup session has expired or belongs to another user.',
-                ephemeral: true
+                flags: ['Ephemeral']
             });
         }
 
@@ -30,7 +31,7 @@ module.exports = {
             if (!channel) {
                 return await interaction.reply({
                     content: 'The target channel no longer exists.',
-                    ephemeral: true
+                    flags: ['Ephemeral']
                 });
             }
 
@@ -38,7 +39,7 @@ module.exports = {
             const selectMenu = new StringSelectMenuBuilder()
                 .setCustomId('role-select')
                 .setPlaceholder('Select roles to add/remove')
-                .setMinValues(1)
+                .setMinValues(0)  // Changed from 1 to 0 to allow deselecting
                 .setMaxValues(setupData.selectedRoles.length);
 
             // Add options from selected roles
@@ -55,13 +56,21 @@ module.exports = {
 
             selectMenu.addOptions(roleOptions);
 
-            await channel.send({
+            const message = await channel.send({
                 embeds: [{
                     title: 'Role Selection',
-                    description: 'Select roles below to add/remove them.',
+                    description: 'Use the menu below to add or remove roles from yourself.\nThis menu will remain active indefinitely.',
                     color: 0x0099ff
                 }],
                 components: [new ActionRowBuilder().addComponents(selectMenu)]
+            });
+
+            // Save to database
+            await interaction.client.services.database.create(RoleMenu, {
+                guildId: interaction.guildId,
+                channelId: channel.id,
+                messageId: message.id,
+                roles: setupData.selectedRoles
             });
 
             await interaction.update({

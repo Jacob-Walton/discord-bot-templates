@@ -1,6 +1,8 @@
 const fs = require('fs').promises;
 const path = require('path');
 const logger = require('../utils/Logger');
+const ComponentRegistry = require('./ComponentRegistry');
+const ComponentBuilders = require('./ComponentBuilders');
 
 class ComponentHandler {
     constructor(client) {
@@ -8,6 +10,10 @@ class ComponentHandler {
         this.buttons = new Map();
         this.selectMenus = new Map();
         this.modals = new Map();
+        
+        // Initialize registry and builders
+        this.registry = new ComponentRegistry();
+        this.builders = new ComponentBuilders(this.registry);
     }
 
     async loadComponents() {
@@ -38,6 +44,12 @@ class ComponentHandler {
                                     break;
                                 case 'modals':
                                     this.modals.set(component.customId, component);
+                                    // Register modal with the registry
+                                    this.registry.register({
+                                        type: 'MODAL',
+                                        customId: component.customId,
+                                        create: component.create
+                                    });
                                     break;
                             }
                             this.client.logger.debug(`Loaded ${type} component: ${component.customId}`);
@@ -100,7 +112,7 @@ class ComponentHandler {
             this.client.logger.error(`Error handling select menu ${interaction.customId}:`, error);
             await interaction.reply({ 
                 content: 'There was an error processing this selection!', 
-                ephemeral: true
+                flags: ['Ephemeral']
             });
         }
     }

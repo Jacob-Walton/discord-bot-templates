@@ -17,7 +17,7 @@ module.exports = {
         if (!handlerData) {
             await interaction.reply({
                 content: 'This pagination has expired. Please run the command again.',
-                ephemeral: true
+                flags: ['Ephemeral']
             });
             return;
         }
@@ -35,7 +35,7 @@ module.exports = {
             interaction.client.logger.error('Error handling pagination:', error);
             await interaction.reply({
                 content: 'An error occurred while updating the page.',
-                ephemeral: true
+                flags: ['Ephemeral']
             });
         }
     }

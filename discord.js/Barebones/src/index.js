@@ -11,9 +11,11 @@ const CacheService = require('./services/CacheService');
 class Bot {
     constructor() {
         // Initialize services first
+        const cacheService = new CacheService();
+        
         this.services = {
-            cache: new CacheService(),
-            database: new DatabaseService(this.cache)
+            cache: cacheService,
+            database: new DatabaseService(cacheService)
         };
 
         // Initialize Discord client

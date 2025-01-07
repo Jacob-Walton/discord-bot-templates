@@ -34,7 +34,7 @@ module.exports = {
             await interaction.client.services.cache.delete(`rolesetup:${interaction.guildId}`);
             return await interaction.reply({
                 content: 'Role setup cancelled.',
-                ephemeral: true
+                flags: ['Ephemeral']
             });
         }
 
@@ -65,7 +65,7 @@ module.exports = {
         if (!availableRoles.size) {
             return await interaction.reply({
                 content: 'No suitable roles found. Make sure the bot\'s role is positioned above the roles you want to manage.',
-                ephemeral: true
+                flags: ['Ephemeral']
             });
         }
 
@@ -105,7 +105,7 @@ module.exports = {
                 new ActionRowBuilder().addComponents(selectMenu),
                 buttons
             ],
-            ephemeral: true
+            flags: ['Ephemeral']
         });
 
         await interaction.client.services.cache.set(

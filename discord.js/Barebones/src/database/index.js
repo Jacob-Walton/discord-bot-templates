@@ -5,7 +5,7 @@ const config = require('../../config');
 const models = {
     Guild: require('./models/Guild'),
     User: require('./models/User'),
-    Setting: require('./models/Setting')
+    Setting: require('./models/Setting'),
 };
 
 // Export models and connection handling

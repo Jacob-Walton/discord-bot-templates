@@ -1,4 +1,5 @@
 const { TextInputStyle } = require('discord.js');
+const feedbackSchema = require('../../database/models/Feedback');
 
 module.exports = {
     customId: 'feedback-modal',
@@ -39,11 +40,22 @@ module.exports = {
         const title = interaction.fields.getTextInputValue('feedback-title');
         const description = interaction.fields.getTextInputValue('feedback-description');
 
-        // Here you would typically save the feedback to your database
+        if (!title || !description) {
+            return await interaction.reply({
+                content: 'Please fill out all fields.',
+                flags: ['Ephemeral']
+            });
+        }
+
+        await feedbackSchema.create({
+            userId: interaction.user.id,
+            title,
+            feedback: description
+        });
         
         await interaction.reply({
             content: 'Thank you for your feedback!',
-            ephemeral: true
+            flags: ['Ephemeral']
         });
     }
 };

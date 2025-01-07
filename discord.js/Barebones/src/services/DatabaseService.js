@@ -4,6 +4,9 @@ const { database } = require('../../config');
 
 class DatabaseService {
     constructor(cacheService) {
+        if (!cacheService) {
+            throw new Error('CacheService must be provided to DatabaseService');
+        }
         this.cache = cacheService;
         this.options = {
             maxPoolSize: 10,

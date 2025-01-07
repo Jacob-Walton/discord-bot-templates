@@ -15,7 +15,7 @@ module.exports = {
         if (!setupData || setupData.userId !== interaction.user.id) {
             return await interaction.reply({
                 content: 'This setup session has expired or belongs to another user.',
-                ephemeral: true
+                flags: ['Ephemeral']
             });
         }
 
