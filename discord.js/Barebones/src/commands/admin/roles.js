@@ -53,7 +53,6 @@ module.exports = {
 
         const botHighestRole = interaction.guild.members.me.roles.highest;
         
-        // Updated role filtering
         const availableRoles = interaction.guild.roles.cache
             .filter(role => 
                 !role.managed && // Not a bot role
@@ -73,7 +72,6 @@ module.exports = {
             Array.from(availableRoles.values()).map(r => r.name)
         );
 
-        // Create select menu using proper builder
         const selectMenu = new StringSelectMenuBuilder()
             .setCustomId('rolesetup:select')
             .setPlaceholder('Select roles to include in the menu')
