@@ -1,5 +1,13 @@
 module.exports = {
     customId: 'role-select',
+    
+    initialize(roles) {
+        return new StringSelectMenuBuilder()
+            .setCustomId(this.customId)
+            .setPlaceholder('Select roles to add/remove')
+            .setMinValues(0)
+            .setMaxValues(roles.length);
+    },
 
     async execute(interaction) {
         const selectedRoles = interaction.values;
@@ -66,5 +74,5 @@ module.exports = {
                 : 'No changes were needed - you already have the selected configuration.',
             flags: ['Ephemeral']
         });
-    }
+    },
 };

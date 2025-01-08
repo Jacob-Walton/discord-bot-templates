@@ -1,15 +1,18 @@
 const axios = require('axios');
 const logger = require('../utils/Logger');
-const cache = require('../services/CacheService');
+const CacheService = require('../services/CacheService');
 
 class APIService {
     constructor() {
         this.axios = axios.create({
             timeout: 10000,
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'User-Agent': `${process.env.npm_package_name}/${process.env.npm_package_version}`
             }
         });
+
+        this.cache = new CacheService();
 
         // Response interceptor for logging
         this.axios.interceptors.response.use(
@@ -38,8 +41,8 @@ class APIService {
     }
 
     async get(url, options = {}) {
-        const cacheKey = `api:${url}`;
-        const cached = await cache.get(cacheKey);
+        const cacheKey = url;
+        const cached = await this.cache.get(cacheKey, 'api');
         
         if (cached && !options.bypass) {
             return cached;
@@ -48,7 +51,7 @@ class APIService {
         const response = await this.axios.get(url, options);
         
         if (options.cache !== false) {
-            await cache.set(cacheKey, response.data, options.ttl);
+            await this.cache.set(cacheKey, response.data, options.ttl, 'api');
         }
 
         return response.data;
@@ -67,6 +70,26 @@ class APIService {
     async delete(url, options = {}) {
         const response = await this.axios.delete(url, options);
         return response.data;
+    }
+
+    async getRaw(url, options = {}) {
+        const response = await this.axios.get(url, options);
+        return response;
+    }
+
+    async postRaw(url, data, options = {}) {
+        const response = await this.axios.post(url, data, options);
+        return response;
+    }
+
+    async putRaw(url, data, options = {}) {
+        const response = await this.axios.put(url, data, options);
+        return response;
+    }
+
+    async deleteRaw(url, options = {}) {
+        const response = await this.axios.delete(url, options);
+        return response;
     }
 }
 

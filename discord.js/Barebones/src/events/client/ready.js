@@ -1,55 +1,44 @@
 const { ActionRowBuilder, StringSelectMenuBuilder } = require('discord.js');
 const RoleMenu = require('../../database/models/RoleMenu');
+const RoleSelect = require('../../components/selectMenus/RoleSelect');
+const fs = require('fs').promises;
+const path = require('path');
 
 module.exports = {
     name: 'ready',
     once: true,
     async execute(client) {
         client.logger.info(`Logged in as ${client.user.tag}`);
-
-        // Restore role menus
+        await this.loadModules(client);
+    },
+    async loadModules(client) {
         try {
-            const roleMenus = await RoleMenu.find({});
-            
-            for (const menuData of roleMenus) {
-                const guild = await client.guilds.fetch(menuData.guildId);
-                if (!guild) continue;
+            const modulesPath = path.join(__dirname, '..', '..', 'modules', 'ready');
+            const moduleFiles = (await fs.readdir(modulesPath))
+                .filter(file => file.endsWith('.js'));
 
-                const channel = await guild.channels.fetch(menuData.channelId);
-                if (!channel) continue;
+            for (const file of moduleFiles) {
+                if (!file.endsWith('.js')) continue;
 
                 try {
-                    const message = await channel.messages.fetch(menuData.messageId);
-                    if (!message) continue;
+                    const filePath = path.join(modulesPath, file);
+                    delete require.cache[require.resolve(filePath)];
+                    const module = require(filePath);
 
-                    const selectMenu = new StringSelectMenuBuilder()
-                        .setCustomId('role-select')
-                        .setPlaceholder('Select roles to add/remove')
-                        .setMinValues(0)  // Changed from 1 to 0 to allow deselecting
-                        .setMaxValues(menuData.roles.length);
-
-                    const roleOptions = await Promise.all(
-                        menuData.roles.map(async roleId => {
-                            const role = await guild.roles.fetch(roleId);
-                            return {
-                                label: role.name,
-                                value: role.id,
-                                description: `Toggle the ${role.name} role`
-                            };
-                        })
-                    );
-
-                    selectMenu.addOptions(roleOptions);
-
-                    await message.edit({
-                        components: [new ActionRowBuilder().addComponents(selectMenu)]
-                    });
+                    if ('initialize' in module) {
+                        await module.initialize(client);
+                        client.logger.debug(`Loaded module: ${file}`);
+                    } else {
+                        client.logger.warn(`Invalid module file structure: ${filePath}`);
+                    }
                 } catch (error) {
-                    client.logger.error(`Failed to restore role menu in guild ${menuData.guildId}:`, error);
+                    client.logger.error(`Error loading module: ${file}`, error);
+                    throw error;
                 }
             }
         } catch (error) {
-            client.logger.error('Failed to restore role menus:', error);
+            client.logger.error('Error loading modules:', error);
+            throw error;
         }
     }
 };

@@ -137,5 +137,9 @@ dist
 
 pnpm-lock.yaml
 bun.lockb
+deno.lock
 
 *.py
+output/
+*.txt
+*.yml

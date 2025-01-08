@@ -9,6 +9,25 @@ class Logger {
             return Logger.instance;
         }
 
+        this.safeStringify = (obj) => {
+            const cache = new Set();
+            return JSON.stringify(obj, (key, value) => {
+                if (typeof value === 'object' && value !== null) {
+                    if (cache.has(value)) {
+                        return '[Circular Reference]';
+                    }
+                    cache.add(value);
+                }
+                if (value instanceof Error) {
+                    return {
+                        message: value.message,
+                        stack: value.stack
+                    };
+                }
+                return value;
+            }, 2);
+        };
+
         // Create logs directory if it doesn't exist
         const logsDir = path.join(process.cwd(), 'logs');
         if (!require('fs').existsSync(logsDir)) {
@@ -30,7 +49,7 @@ class Logger {
                 delete metadata.error;
             }
 
-            const metadataStr = JSON.stringify(metadata, null, 2);
+            const metadataStr = this.safeStringify(metadata);
             if (metadataStr !== '{}') {
                 output += `\nMetadata: ${metadataStr}`;
             }
