@@ -142,7 +142,7 @@ deno.lock
 *.py
 output/
 *.txt
-*.yml
+config.yml
 *.pem
 
 # Hide internal git repository structure
