@@ -8,7 +8,9 @@ const config = {
         devs: (process.env.DEV_IDS || '').split(',').filter(Boolean),
     },
     database: {
-        uri: process.env.MONGODB_URI || 'mongodb://localhost:27017/discord-bot'
+        uri: process.env.MONGODB_URI || 'mongodb://localhost:27017/discord-bot',
+        sslCA: process.env.MONGODB_SSL_CA,
+        sslCert: process.env.MONGODB_SSL_CERT,
     },
     env: process.env.NODE_ENV || 'development',
 }

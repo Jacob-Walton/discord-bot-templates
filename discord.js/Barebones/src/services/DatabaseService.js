@@ -12,6 +12,9 @@ class DatabaseService {
             maxPoolSize: 10,
             serverSelectionTimeoutMS: 5000,
             socketTimeoutMS: 45000,
+            tls: true,
+            tlsCAFile: database.sslCA,
+            tlsCertificateKeyFile: database.sslCert,
         };
 
         mongoose.connection.on('connected', () => {
