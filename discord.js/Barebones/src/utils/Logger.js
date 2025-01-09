@@ -1,12 +1,21 @@
 const winston = require('winston');
-const path = require('path');
+const path = require('node:path');
 const { createLogger, format, transports } = winston;
 const { combine, timestamp, printf, colorize, errors } = format;
 
 class Logger {
+    static #instance = null;
+
+    static getInstance() {
+        if (!Logger.#instance) {
+            Logger.#instance = new Logger();
+        }
+        return Logger.#instance;
+    }
+
     constructor() {
-        if (Logger.instance) {
-            return Logger.instance;
+        if (Logger.#instance) {
+            throw new Error('Use Logger.getInstance() instead of new Logger()');
         }
 
         this.safeStringify = (obj) => {
@@ -30,13 +39,17 @@ class Logger {
 
         // Create logs directory if it doesn't exist
         const logsDir = path.join(process.cwd(), 'logs');
-        if (!require('fs').existsSync(logsDir)) {
-            require('fs').mkdirSync(logsDir);
+        if (!require('node:fs').existsSync(logsDir)) {
+            require('node:fs').mkdirSync(logsDir);
         }
 
         // Track recent errors to prevent duplicates
         this.recentErrors = new Map();
-        this.cleanupInterval = setInterval(() => this.cleanupOldErrors(), 60000);
+        
+        // Only set cleanup interval if not in test environment
+        if (process.env.NODE_ENV !== 'test') {
+            this.cleanupInterval = setInterval(() => this.cleanupOldErrors(), 60000);
+        }
 
         const customFormat = printf(({ level, message, timestamp, ...metadata }) => {
             let output = `${timestamp} [${level}]: ${message}`;
@@ -46,7 +59,8 @@ class Logger {
                 if (metadata.error.stack) {
                     output += `\nStack: ${metadata.error.stack}`;
                 }
-                delete metadata.error;
+                const { error: _, ...rest } = metadata;
+                metadata = rest;
             }
 
             const metadataStr = this.safeStringify(metadata);
@@ -102,6 +116,13 @@ class Logger {
         });
 
         Logger.instance = this;
+    }
+
+    // Add cleanup method
+    cleanup() {
+        if (this.cleanupInterval) {
+            clearInterval(this.cleanupInterval);
+        }
     }
 
     cleanupOldErrors() {
@@ -180,4 +201,4 @@ class Logger {
     }
 }
 
-module.exports = new Logger();
+module.exports = Logger.getInstance();
