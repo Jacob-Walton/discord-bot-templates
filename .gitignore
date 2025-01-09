@@ -147,3 +147,4 @@ config.yml
 
 # Hide internal git repository structure
 **/.gitignore
+package-lock.json
