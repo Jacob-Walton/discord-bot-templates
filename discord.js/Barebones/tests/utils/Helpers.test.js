@@ -55,10 +55,6 @@ describe('Helpers', () => {
         const min = 5;
         const max = 10;
         const random = randomInt(min, max);
-        const random2 = randomInt(min, max);
-
-        // check random and random2 don't equal each other
-        expect(random).not.toBe(random2);
         
         // check random is within the range
         expect(random).toBeGreaterThanOrEqual(min);
