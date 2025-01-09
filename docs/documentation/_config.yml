@@ -13,12 +13,12 @@ plugins:
 # Navigation
 nav_pages:
   - title: Home
-    url: /
+    url: /documentation/
   - title: Commands
-    url: /pages/commands
+    url: /documentation/pages/commands
   - title: Setup
-    url: /pages/setup
+    url: /documentation/pages/setup
   - title: Configuration
-    url: /pages/configuration
+    url: /documentation/pages/configuration
   - title: Development
-    url: /pages/development
+    url: /documentation/pages/development
