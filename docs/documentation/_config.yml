@@ -1,0 +1,24 @@
+title: Discord Bot Documentation
+description: Documentation for the Discord bot
+baseurl: "https://jacob-walton.github.io"
+url: "/discord-bot-documentation/documentation"
+theme: jekyll-theme-minimal
+
+# Build settings
+markdown: kramdown
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+
+# Navigation
+nav_pages:
+  - title: Home
+    url: /
+  - title: Commands
+    url: /pages/commands
+  - title: Setup
+    url: /pages/setup
+  - title: Configuration
+    url: /pages/configuration
+  - title: Development
+    url: /pages/development
