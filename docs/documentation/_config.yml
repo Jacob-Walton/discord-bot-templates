@@ -1,27 +1,30 @@
 title: Discord Bot Documentation
 description: Documentation for the Discord bot
-baseurl: "https://jacob-walton.github.io"
-url: "/discord-bot-documentation/documentation"
+baseurl: "/documentation"
+url: ""
 theme: jekyll-theme-minimal
 
 # Build settings
 markdown: kramdown
 plugins:
   - jekyll-feed
-  - jekyll-seo-tag
+
+sass:
+  style: compressed
+  sass_dir: docs/_sass
 
 # Navigation
 nav_pages:
   - title: Home
-    url: /documentation/
+    url: /
   - title: Commands
-    url: /documentation/pages/commands
+    url: /documentation/pages/commands/
   - title: Setup
-    url: /documentation/pages/setup
+    url: /documentation/pages/setup/
   - title: Configuration
-    url: /documentation/pages/configuration
+    url: /documentation/pages/configuration/
   - title: Development
-    url: /documentation/pages/development
+    url: /documentation/pages/development/
 
 exclude:
   - Gemfile

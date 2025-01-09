@@ -9,10 +9,10 @@ Welcome to the documentation for our Discord bot. This documentation will help y
 
 ## Quick Links
 
-- [Setup Guide]({{ '/pages/setup' | relative_url }})
-- [Available Commands]({{ '/pages/commands' | relative_url }})
-- [Configuration]({{ '/pages/configuration' | relative_url }})
-- [Development Guide]({{ '/pages/development' | relative_url }})
+- [Setup Guide]({{ '/documentation/pages/setup' | relative_url }})
+- [Available Commands]({{ '/documentation/pages/commands' | relative_url }})
+- [Configuration]({{ '/documentation/pages/configuration' | relative_url }})
+- [Development Guide]({{ '/documentation/pages/development' | relative_url }})
 
 ## Features
 

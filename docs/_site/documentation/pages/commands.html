@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bot Commands - </title>
+    <link rel="stylesheet" href="/documentation/assets/css/style.css">
+</head>
+<body>
+    <header>
+    <div class="wrapper">
+        <div class="header-content">
+            <h1><a href="/"></a></h1>
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/documentation/pages/commands/">Commands</a></li>
+                    <li><a href="/documentation/pages/setup/">Setup</a></li>
+                    <li><a href="/documentation/pages/configuration/">Configuration</a></li>
+                    <li><a href="/documentation/pages/development/">Development</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</header>
+    
+    <main class="content">
+        <h1 id="bot-commands">Bot Commands</h1>
+
+<p>This page lists all available commands for the bot. Each command is prefixed with <code class="language-plaintext highlighter-rouge">/</code> as they are slash commands.</p>
+
+<h2 id="general-commands">General Commands</h2>
+
+<h3 id="ping"><code class="language-plaintext highlighter-rouge">/ping</code></h3>
+<p>Checks the bot’s latency and API response time.</p>
+<ul>
+  <li>No additional parameters required</li>
+  <li>Shows both bot latency and Discord API latency</li>
+  <li>
+    <p>Example response:</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  Bot latency: 10ms
+  API latency: 20ms
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h3 id="feedback"><code class="language-plaintext highlighter-rouge">/feedback</code></h3>
+<p>Submit feedback about the bot.</p>
+<ul>
+  <li>Opens a modal dialog with two fields:</li>
+  <li>Title: Brief description of your feedback</li>
+  <li>Description: Detailed feedback message</li>
+  <li>Requirements:</li>
+  <li>Title must be between 3-100 characters</li>
+  <li>Description must be between 10-1000 characters</li>
+</ul>
+
+<h2 id="role-management">Role Management</h2>
+
+<h3 id="roles-setup"><code class="language-plaintext highlighter-rouge">/roles setup</code></h3>
+<p>Sets up a role selection menu in a specified channel.</p>
+<ul>
+  <li>Required Permissions: Manage Roles</li>
+  <li>Parameters:</li>
+  <li><code class="language-plaintext highlighter-rouge">channel</code>: The channel where the role menu will be posted</li>
+  <li>Process:
+    <ol>
+      <li>Select the roles you want to include in the menu</li>
+      <li>Click Confirm to create the menu</li>
+      <li>Users can then select/deselect roles from the created menu</li>
+    </ol>
+  </li>
+  <li>Notes:</li>
+  <li>The bot’s highest role must be above the roles it’s managing</li>
+  <li>Cannot manage roles that are higher than the bot’s highest role</li>
+  <li>Maximum of 25 roles can be added to a single menu</li>
+</ul>
+
+<h3 id="roles-cancel"><code class="language-plaintext highlighter-rouge">/roles cancel</code></h3>
+<p>Cancels the current role menu setup process.</p>
+<ul>
+  <li>Required Permissions: Manage Roles</li>
+  <li>No additional parameters required</li>
+  <li>Useful if you need to abort the setup process</li>
+</ul>
+
+<h2 id="role-menu-features">Role Menu Features</h2>
+
+<p>Once a role menu is set up, users can:</p>
+<ul>
+  <li>Select multiple roles at once</li>
+  <li>Remove roles by deselecting them</li>
+  <li>See clear feedback about which roles were added/removed</li>
+  <li>Get error messages if role changes fail</li>
+</ul>
+
+<h2 id="error-handling">Error Handling</h2>
+
+<p>All commands include built-in error handling that will:</p>
+<ul>
+  <li>Notify users if they lack required permissions</li>
+  <li>Provide feedback if an operation fails</li>
+  <li>Give clear instructions on how to resolve common issues</li>
+  <li>Maintain audit logs for server administrators</li>
+</ul>
+
+<h2 id="technical-notes">Technical Notes</h2>
+
+<ul>
+  <li>All commands use Discord’s slash command system</li>
+  <li>Commands are automatically registered globally</li>
+  <li>Response times are optimized through caching</li>
+  <li>Error logs are maintained for troubleshooting</li>
+</ul>
+
+<h2 id="support">Support</h2>
+
+<p>If you encounter any issues with these commands:</p>
+<ol>
+  <li>Check that the bot has the required permissions</li>
+  <li>Verify that role hierarchies are correctly set up</li>
+  <li>Use the <code class="language-plaintext highlighter-rouge">/feedback</code> command to report problems</li>
+  <li>Ensure you’re using the latest version of Discord</li>
+</ol>
+
+    </main>
+
+    <footer>
+    <div class="wrapper">
+        <p>&copy; 2025 . All rights reserved.</p>
+    </div>
+</footer>
+</body>
+</html>

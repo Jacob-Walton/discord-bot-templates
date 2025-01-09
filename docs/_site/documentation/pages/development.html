@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Development Guide - </title>
+    <link rel="stylesheet" href="/documentation/assets/css/style.css">
+</head>
+<body>
+    <header>
+    <div class="wrapper">
+        <div class="header-content">
+            <h1><a href="/"></a></h1>
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/documentation/pages/commands/">Commands</a></li>
+                    <li><a href="/documentation/pages/setup/">Setup</a></li>
+                    <li><a href="/documentation/pages/configuration/">Configuration</a></li>
+                    <li><a href="/documentation/pages/development/">Development</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</header>
+    
+    <main class="content">
+        <h1 id="development-guide">Development Guide</h1>
+
+<p>This document covers everything you need to know about developing and contributing to the Discord bot.</p>
+
+<h2 id="project-structure">Project Structure</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>├── src/
+│   ├── commands/          # Bot commands
+│   ├── components/        # Discord UI components
+│   ├── database/         # Database models
+│   ├── events/           # Discord event handlers
+│   ├── handlers/         # System handlers
+│   ├── services/         # Core services
+│   └── utils/            # Utility functions
+├── tests/                # Test files
+└── docs/                 # Documentation
+</code></pre></div></div>
+
+<h2 id="core-components">Core Components</h2>
+
+<h3 id="command-handler">Command Handler</h3>
+<ul>
+  <li>Located in <code class="language-plaintext highlighter-rouge">src/handlers/CommandHandler.js</code></li>
+  <li>Automatically loads commands from the commands directory</li>
+  <li>Handles command registration with Discord</li>
+  <li>Manages command execution and error handling</li>
+</ul>
+
+<h3 id="event-handler">Event Handler</h3>
+<ul>
+  <li>Located in <code class="language-plaintext highlighter-rouge">src/handlers/EventHandler.js</code></li>
+  <li>Loads event handlers dynamically</li>
+  <li>Manages Discord events like messages, interactions, etc.</li>
+  <li>Provides logging for event execution</li>
+</ul>
+
+<h3 id="component-handler">Component Handler</h3>
+<ul>
+  <li>Located in <code class="language-plaintext highlighter-rouge">src/handlers/ComponentHandler.js</code></li>
+  <li>Manages Discord UI components (buttons, select menus, modals)</li>
+  <li>Handles component interactions and state management</li>
+</ul>
+
+<h2 id="services">Services</h2>
+
+<h3 id="cache-service">Cache Service</h3>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Example usage</span>
+<span class="kd">const</span> <span class="nx">cache</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">CacheService</span><span class="p">({</span>
+    <span class="na">stdTTL</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span>  <span class="c1">// 5 minutes</span>
+    <span class="na">checkperiod</span><span class="p">:</span> <span class="mi">60</span>
+<span class="p">});</span>
+
+<span class="k">await</span> <span class="nx">cache</span><span class="p">.</span><span class="nf">set</span><span class="p">(</span><span class="dl">'</span><span class="s1">key</span><span class="dl">'</span><span class="p">,</span> <span class="nx">value</span><span class="p">,</span> <span class="nx">ttl</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">cache</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">key</span><span class="dl">'</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="database-service">Database Service</h3>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Example usage</span>
+<span class="kd">const</span> <span class="nx">db</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">DatabaseService</span><span class="p">(</span><span class="nx">cacheService</span><span class="p">);</span>
+<span class="k">await</span> <span class="nx">db</span><span class="p">.</span><span class="nf">connect</span><span class="p">();</span>
+
+<span class="kd">const</span> <span class="nb">document</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">db</span><span class="p">.</span><span class="nf">findById</span><span class="p">(</span><span class="nx">Model</span><span class="p">,</span> <span class="nx">id</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">newDoc</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">db</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="nx">Model</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="api-service">API Service</h3>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Example usage</span>
+<span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">APIService</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="nx">url</span><span class="p">);</span>
+<span class="k">await</span> <span class="nx">APIService</span><span class="p">.</span><span class="nf">post</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="testing">Testing</h2>
+
+<h3 id="running-tests">Running Tests</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Run all tests</span>
+npm <span class="nb">test</span>
+
+<span class="c"># Run tests in watch mode</span>
+npm run <span class="nb">test</span>:watch
+
+<span class="c"># Generate coverage report</span>
+npm run <span class="nb">test</span>:coverage
+</code></pre></div></div>
+
+<h3 id="test-structure">Test Structure</h3>
+<ul>
+  <li>Uses Jest testing framework</li>
+  <li>Mock utilities available in <code class="language-plaintext highlighter-rouge">tests/utils/testUtils.js</code></li>
+  <li>Tests are located next to the files they test</li>
+  <li>Follows naming convention: <code class="language-plaintext highlighter-rouge">[filename].test.js</code></li>
+</ul>
+
+<h3 id="example-test">Example Test</h3>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="p">{</span> <span class="nx">createMockInteraction</span> <span class="p">}</span> <span class="o">=</span> <span class="nf">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">../utils/testUtils</span><span class="dl">'</span><span class="p">);</span>
+
+<span class="nf">describe</span><span class="p">(</span><span class="dl">'</span><span class="s1">Command Name</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">interaction</span><span class="p">;</span>
+
+    <span class="nf">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">interaction</span> <span class="o">=</span> <span class="nf">createMockInteraction</span><span class="p">();</span>
+    <span class="p">});</span>
+
+    <span class="nf">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should do something</span><span class="dl">'</span><span class="p">,</span> <span class="k">async </span><span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="c1">// Test implementation</span>
+        <span class="nf">expect</span><span class="p">(</span><span class="nx">result</span><span class="p">).</span><span class="nf">toBe</span><span class="p">(</span><span class="nx">expectedValue</span><span class="p">);</span>
+    <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h2 id="utility-functions">Utility Functions</h2>
+
+<h3 id="validators">Validators</h3>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="p">{</span> <span class="nx">isValidUrl</span><span class="p">,</span> <span class="nx">isValidEmail</span> <span class="p">}</span> <span class="o">=</span> <span class="nf">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">./utils/Validators</span><span class="dl">'</span><span class="p">);</span>
+
+<span class="c1">// Available validators</span>
+<span class="nf">isValidUrl</span><span class="p">(</span><span class="nx">string</span><span class="p">)</span>
+<span class="nf">isValidEmail</span><span class="p">(</span><span class="nx">email</span><span class="p">)</span>
+<span class="nf">isValidHexColor</span><span class="p">(</span><span class="nx">color</span><span class="p">)</span>
+<span class="nf">isValidUsername</span><span class="p">(</span><span class="nx">username</span><span class="p">)</span>
+<span class="nf">isValidDiscordId</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span>
+<span class="nf">isValidPermission</span><span class="p">(</span><span class="nx">permission</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="helpers">Helpers</h3>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="p">{</span> <span class="nx">chunk</span><span class="p">,</span> <span class="nx">delay</span><span class="p">,</span> <span class="nx">generateId</span> <span class="p">}</span> <span class="o">=</span> <span class="nf">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">./utils/Helpers</span><span class="dl">'</span><span class="p">);</span>
+
+<span class="c1">// Available helpers</span>
+<span class="nf">chunk</span><span class="p">(</span><span class="nx">array</span><span class="p">,</span> <span class="nx">size</span><span class="p">)</span>           <span class="c1">// Split array into chunks</span>
+<span class="nf">delay</span><span class="p">(</span><span class="nx">ms</span><span class="p">)</span>                    <span class="c1">// Promise-based delay</span>
+<span class="nf">generateId</span><span class="p">(</span><span class="nx">length</span><span class="p">)</span>          <span class="c1">// Generate random ID</span>
+<span class="nf">formatDuration</span><span class="p">(</span><span class="nx">ms</span><span class="p">)</span>          <span class="c1">// Format milliseconds to duration</span>
+<span class="nf">paginate</span><span class="p">(</span><span class="nx">items</span><span class="p">,</span> <span class="nx">page</span><span class="p">,</span> <span class="nx">size</span><span class="p">)</span> <span class="c1">// Paginate array of items</span>
+</code></pre></div></div>
+
+<h2 id="error-handling">Error Handling</h2>
+
+<h3 id="error-handler-class">Error Handler Class</h3>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">ErrorHandler</span> <span class="o">=</span> <span class="nf">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">./handlers/ErrorHandler</span><span class="dl">'</span><span class="p">);</span>
+
+<span class="c1">// Handles:</span>
+<span class="c1">// - Discord.js specific errors</span>
+<span class="c1">// - Process-wide errors</span>
+<span class="c1">// - Unhandled rejections</span>
+<span class="c1">// - Graceful shutdown</span>
+</code></pre></div></div>
+
+<h3 id="logging">Logging</h3>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">logger</span> <span class="o">=</span> <span class="nf">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">./utils/Logger</span><span class="dl">'</span><span class="p">);</span>
+
+<span class="nx">logger</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="dl">'</span><span class="s1">Message</span><span class="dl">'</span><span class="p">);</span>
+<span class="nx">logger</span><span class="p">.</span><span class="nf">warn</span><span class="p">(</span><span class="dl">'</span><span class="s1">Warning message</span><span class="dl">'</span><span class="p">);</span>
+<span class="nx">logger</span><span class="p">.</span><span class="nf">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Error message</span><span class="dl">'</span><span class="p">,</span> <span class="nx">error</span><span class="p">);</span>
+<span class="nx">logger</span><span class="p">.</span><span class="nf">debug</span><span class="p">(</span><span class="dl">'</span><span class="s1">Debug message</span><span class="dl">'</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="development-workflow">Development Workflow</h2>
+
+<ol>
+  <li>Create Feature Branch
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git checkout <span class="nt">-b</span> feature/feature-name
+</code></pre></div>    </div>
+  </li>
+  <li>Make Changes
+    <ul>
+      <li>Follow existing code style</li>
+      <li>Add tests for new features</li>
+      <li>Update documentation when needed</li>
+    </ul>
+  </li>
+  <li>Run Tests
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm <span class="nb">test</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Commit Changes
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git add <span class="nb">.</span>
+git commit <span class="nt">-m</span> <span class="s2">"Description of changes"</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Submit Pull Request
+    <ul>
+      <li>Provide clear description of changes</li>
+      <li>Reference any related issues</li>
+      <li>Ensure tests pass</li>
+      <li>Wait for review</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="environment-setup">Environment Setup</h2>
+
+<ol>
+  <li>Development Environment
+    <pre><code class="language-env">NODE_ENV=development
+BOT_TOKEN=your_bot_token
+CLIENT_ID=your_client_id
+MONGODB_URI=mongodb://localhost:27017/discord-bot
+</code></pre>
+  </li>
+  <li>Testing Environment
+    <pre><code class="language-env">NODE_ENV=test
+MONGODB_URI=mongodb://localhost:27017/discord-bot-test
+</code></pre>
+  </li>
+</ol>
+
+<h2 id="database-models">Database Models</h2>
+
+<h3 id="rolemenu-model">RoleMenu Model</h3>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+    <span class="nl">guildId</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span>    <span class="c1">// Required</span>
+    <span class="nx">channelId</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span>  <span class="c1">// Required</span>
+    <span class="nx">messageId</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span>  <span class="c1">// Required</span>
+    <span class="nx">roles</span><span class="p">:</span> <span class="p">[</span><span class="nb">String</span><span class="p">]</span>     <span class="c1">// Required</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="feedback-model">Feedback Model</h3>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+    <span class="nl">userId</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span>   <span class="c1">// Required</span>
+    <span class="nx">title</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span>    <span class="c1">// Required</span>
+    <span class="nx">feedback</span><span class="p">:</span> <span class="nb">String</span>  <span class="c1">// Required</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="contributing-guidelines">Contributing Guidelines</h2>
+
+<ol>
+  <li>Code Style
+    <ul>
+      <li>Use consistent spacing (2 spaces)</li>
+      <li>Follow ESLint configuration</li>
+      <li>Use meaningful variable names</li>
+      <li>Add JSDoc comments for functions</li>
+    </ul>
+  </li>
+  <li>Testing Requirements
+    <ul>
+      <li>Write tests for new features</li>
+      <li>Maintain high test coverage</li>
+      <li>Use appropriate mocks and fixtures</li>
+    </ul>
+  </li>
+  <li>Documentation
+    <ul>
+      <li>Update relevant documentation</li>
+      <li>Add JSDoc comments</li>
+      <li>Include code examples</li>
+    </ul>
+  </li>
+  <li>Pull Request Process
+    <ul>
+      <li>Create feature branch</li>
+      <li>Write clear commit messages</li>
+      <li>Add tests</li>
+      <li>Update documentation</li>
+      <li>Submit PR with description</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="performance-considerations">Performance Considerations</h2>
+
+<ul>
+  <li>Use caching appropriately</li>
+  <li>Optimize database queries</li>
+  <li>Handle rate limits properly</li>
+  <li>Monitor memory usage</li>
+  <li>Log performance metrics</li>
+</ul>
+
+<h2 id="security-best-practices">Security Best Practices</h2>
+
+<ul>
+  <li>Validate all inputs</li>
+  <li>Use environment variables</li>
+  <li>Implement rate limiting</li>
+  <li>Follow principle of least privilege</li>
+  <li>Keep dependencies updated</li>
+</ul>
+
+    </main>
+
+    <footer>
+    <div class="wrapper">
+        <p>&copy; 2025 . All rights reserved.</p>
+    </div>
+</footer>
+</body>
+</html>
