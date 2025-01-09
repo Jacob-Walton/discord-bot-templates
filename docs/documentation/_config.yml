@@ -1,6 +1,6 @@
 title: Discord Bot Documentation
 description: Documentation for the Discord bot
-baseurl: "/documentation"
+baseurl: "/discord-bot-templates/documentation"
 url: ""
 theme: jekyll-theme-minimal
 
