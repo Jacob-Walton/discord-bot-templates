@@ -22,3 +22,9 @@ nav_pages:
     url: /documentation/pages/configuration
   - title: Development
     url: /documentation/pages/development
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
